@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "neat-csv": "^6.0.1"
+  },
+  "name": "import-hosts-zbx-api",
+  "version": "1",
+  "description": "Importar hosts de um arquivo .csv para o zabbix utilizando a API.",
+  "main": "index.js",
+  "author": "alisson-moura",
+  "license": "MIT",
+  "private": false
+}
