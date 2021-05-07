@@ -13,27 +13,22 @@ async function createHost(file) {
         "host": element.host,
         "interfaces": [
           {
-            "type": 2,
-            "main": 1,
-            "useip": 1,
-            "ip": element.ip,
-            "dns": "",
-            "port": "161",
-            "details": {
-              "version": 2,
-              "bulk": 1,
-              "community": "public"
-            }
+            "type": 1,
+                "main": 1,
+                "useip": 1,
+                "ip": element.ip,
+                "dns": "",
+                "port": "10050"
           }
         ],
         "groups": [
           {
-            "groupid": "35"
+            "groupid": ""
           },
         ],
         "templates": [
           {
-            "templateid": "10496"
+            "templateid": ""
           }
         ]
       },
