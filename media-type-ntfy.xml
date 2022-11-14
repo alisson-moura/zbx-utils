@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2022-11-14T13:08:37Z</date>
+    <media_types>
+        <media_type>
+            <name>Ntfy</name>
+            <type>WEBHOOK</type>
+            <parameters>
+                <parameter>
+                    <name>Message</name>
+                    <value>{ALERT.MESSAGE}</value>
+                </parameter>
+                <parameter>
+                    <name>Title</name>
+                    <value>{ALERT.SUBJECT}</value>
+                </parameter>
+                <parameter>
+                    <name>Topic</name>
+                    <value>ZBX-Random-123</value>
+                </parameter>
+                <parameter>
+                    <name>URL</name>
+                    <value>https://ntfy.sh</value>
+                </parameter>
+            </parameters>
+            <script>var ntfy = {&#13;
+    topic: null,&#13;
+    url: null,&#13;
+    title: null,&#13;
+    message: null,&#13;
+&#13;
+    sendNotification: function () {&#13;
+        var params = {&#13;
+            message: ntfy.message,&#13;
+            topic: ntfy.topic,&#13;
+            title: ntfy.title,&#13;
+            tags: [&quot;rotating_light&quot;]&#13;
+        }&#13;
+        var data = JSON.stringify(params)&#13;
+        var response = null&#13;
+        var request = new CurlHttpRequest()&#13;
+        var url = ntfy.url&#13;
+&#13;
+        request.AddHeader('Content-Type: application/json');&#13;
+&#13;
+        Zabbix.Log(4, '[NTFY Webhook] URL: ' + url);&#13;
+        Zabbix.Log(4, '[NTFY Webhook] body: ' + data);&#13;
+        request.Post(url, data);&#13;
+        Zabbix.Log(4, '[NTFY Webhook] HTTP code: ' + request.Status());&#13;
+    }&#13;
+}&#13;
+&#13;
+try {&#13;
+    var params = JSON.parse(value);&#13;
+    ntfy.url = params.URL&#13;
+    ntfy.topic = params.Topic&#13;
+    ntfy.message = params.Message&#13;
+    ntfy.title = params.Title&#13;
+    ntfy.sendNotification()&#13;
+    return 'OK'&#13;
+}&#13;
+catch (error) {&#13;
+    Zabbix.Log(4, '[NTFY Webhook] notification failed: ' + error);&#13;
+    throw 'Sending failed: ' + error + '.';&#13;
+}</script>
+            <message_templates>
+                <message_template>
+                    <event_source>TRIGGERS</event_source>
+                    <operation_mode>PROBLEM</operation_mode>
+                    <subject>Problem: {EVENT.NAME}</subject>
+                    <message>Problem started at {EVENT.TIME} on {EVENT.DATE}&#13;
+Problem name: {EVENT.NAME}&#13;
+Host: {HOST.NAME}&#13;
+Severity: {EVENT.SEVERITY}&#13;
+Operational data: {EVENT.OPDATA}&#13;
+Original problem ID: {EVENT.ID}&#13;
+{TRIGGER.URL}</message>
+                </message_template>
+            </message_templates>
+        </media_type>
+    </media_types>
+</zabbix_export>
